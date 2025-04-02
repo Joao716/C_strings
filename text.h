@@ -16,12 +16,12 @@ void text_add(text*str,text value){
 }
 void text_addChar(text*str,char c){
     size_t aux_len=strlen(*str)+1;
-    *str=(text)realloc(*str,aux_len);
+    *str=(text)realloc(*str,aux_len+1);
     text added=(text)malloc(2);added[0]=c;added[1]='\0';
     strcat(*str,added);
 }
 void text_prependChar(text*str,char c){
-    text aux=malloc(strlen(*str)+1);
+    text aux=malloc(strlen(*str)+2);
     aux[0]=c;aux[1]='\0';
     strcat(aux,*str);
     strcpy(*str,aux);
