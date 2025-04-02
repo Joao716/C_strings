@@ -24,14 +24,15 @@ void text_prependChar(text*str,char c){
     text aux=malloc(strlen(*str)+2);
     aux[0]=c;aux[1]='\0';
     strcat(aux,*str);
+    *str=realloc(*str,strlen(*str)+2);
     strcpy(*str,aux);
 }
 void text_prepend(text*str,text value){
     size_t aux_len=strlen(*str)+strlen(value);
     text aux=(text)malloc(aux_len+1);
-    aux=(text)realloc(aux,aux_len+1);
     strcpy(aux,value);
     strcat(aux,*str);
+    *str=realloc(*str,aux_len+1);
     strcpy(*str,aux);
 }
 unsigned char text_equals(text*str,text value){
@@ -143,5 +144,27 @@ size_t text_numberOf(text*str,text pattern){
         text_replace(&aux,pattern,"");
     }
     return count;
+}
+text*text_split(text*str,text pattern){
+    size_t len=0;
+    text*res=malloc(sizeof(text)*1);
+    long int index = text_indexOf(str,pattern);
+    text front,front2,back;
+    text_set(&front,*str);text_set(&front2,"");
+    text_set(&back,"");
+    while(index>=0){
+        text_substring(&front,&back,0,index);
+        text_substring(&front,&front2,index+strlen(pattern),strlen(front));
+        text_set(&front,front2);
+        len++;
+        res=(text*)realloc(res,sizeof(text)*(len+1));
+        text_set(&res[len-1],back);
+        index=text_indexOf(&front,pattern);
+    }
+    len++;
+    res=(text*)realloc(res,sizeof(text)*(len+1));
+    text_replaceAll(&front,pattern,"");
+    text_set(&res[len-1],front);
+    return res;
 }
 #endif
